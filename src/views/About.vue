@@ -1,7 +1,10 @@
 <template>
   <div class="about">
     <h1>{{ title }}</h1>
-    <button class="btn btn-success" @click.prevent="changeTitle">Change title</button>
+    <div class="mt-4">
+      <button class="btn btn-primary mr-2" @click.prevent="changeTitle">Change title</button>
+      <button class="btn btn-success" @click.prevent="saveOrRemoveToken">Token</button>
+    </div>
   </div>
 </template>
 <script>
@@ -21,6 +24,25 @@ export default {
         this.title = "Change Vue State";
       } else {
         this.title = "Vue Life Cycle";
+      }
+    },
+    saveOrRemoveToken() {
+      if (localStorage.getItem("token")) {
+        localStorage.setItem("token", "");
+      } else {
+        const token = [];
+        const letters =
+          "ABCDEFGHIJKLMNOPQRSTUVWXZYabcedfghijklmnopqrstuvwxzy1234567890";
+
+        for (let index = 0; index < 16; index++) {
+          token.push(
+            letters.charAt(Math.floor(Math.random() * letters.length))
+          );
+        }
+
+        localStorage.setItem("token", token.join(""));
+
+        console.log(localStorage.getItem("token"));
       }
     }
   },

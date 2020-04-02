@@ -3,7 +3,13 @@
     <h1>{{ title }}</h1>
     <p v-if="isLoading">Loading...</p>
     <div v-else class="row">
-      <post-card v-for="(post, index) in posts" :key="index" :post="post" @deletePost="deletePost" />
+      <post-card
+        v-for="(post, index) in posts"
+        :key="index"
+        :post="post"
+        @deletePost="deletePost"
+        @detailPost="detailPost"
+      />
     </div>
   </div>
 </template>
@@ -40,6 +46,9 @@ export default {
     },
     deletePost(id) {
       this.posts = this.posts.filter(post => post.id != id);
+    },
+    detailPost(id) {
+      this.$router.push(`posts/${id}`);
     }
   },
   mounted() {
