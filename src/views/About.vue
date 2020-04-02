@@ -8,6 +8,8 @@
   </div>
 </template>
 <script>
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
+
 export default {
   name: "About",
   data: () => {
@@ -15,7 +17,13 @@ export default {
       title: "Vue Life Cycle"
     };
   },
+  computed: {
+    ...mapState("token", ["token"]),
+    ...mapGetters("token", ["authHeader"])
+  },
   methods: {
+    ...mapMutations("token", ["setToken"]),
+    ...mapActions("token", ["fetchToken"]),
     showLog(cycle) {
       console.log(cycle);
     },
@@ -31,44 +39,22 @@ export default {
         localStorage.setItem("token", "");
       } else {
         const token = [];
-        const letters =
-          "ABCDEFGHIJKLMNOPQRSTUVWXZYabcedfghijklmnopqrstuvwxzy1234567890";
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXZYabcedfghijklmnopqrstuvwxzy1234567890";
 
-        for (let index = 0; index < 16; index++) {
-          token.push(
-            letters.charAt(Math.floor(Math.random() * letters.length))
-          );
+        for (let index = 0; index < 64; index++) {
+          token.push(letters.charAt(Math.floor(Math.random() * letters.length)));
         }
 
         localStorage.setItem("token", token.join(""));
 
-        console.log(localStorage.getItem("token"));
+        console.log("Token", localStorage.getItem("token"));
       }
     }
   },
-  beforeDestroy() {
-    this.showLog("beforeDestroy");
-  },
-  destroyed() {
-    this.showLog("destroyed");
-  },
-  beforeCreate() {
-    console.log("beforeCreate");
-  },
-  created() {
-    this.showLog("created");
-  },
-  beforeUpdate() {
-    this.showLog("beforeUpdate");
-  },
-  updated() {
-    this.showLog("updated");
-  },
-  beforeMount() {
-    this.showLog("beforeMount");
-  },
-  mounted() {
+  async mounted() {
     this.showLog("mounted");
+    await this.fetchToken();
+    console.log(this.authHeader);
   }
 };
 </script>

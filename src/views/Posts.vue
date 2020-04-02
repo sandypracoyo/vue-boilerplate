@@ -16,6 +16,7 @@
 <script>
 import axios from "axios";
 import PostCard from "../components/PostCard";
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "About",
@@ -29,7 +30,13 @@ export default {
       posts: []
     };
   },
+  computed: {
+    ...mapState("token", ["token"]),
+    ...mapGetters("token", ["authHeader"])
+  },
   methods: {
+    ...mapMutations("token", ["setToken"]),
+    ...mapActions("token", ["fetchToken"]),
     async fetchPosts() {
       try {
         const { data } = await axios.get(
@@ -51,8 +58,9 @@ export default {
       this.$router.push(`posts/${id}`);
     }
   },
-  mounted() {
-    this.fetchPosts();
+  async mounted() {
+    await this.fetchPosts();
+    console.log(this.authHeader);
   }
 };
 </script>
